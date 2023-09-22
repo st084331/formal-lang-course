@@ -1,5 +1,5 @@
 import networkx as nx
-from project.automata_builder.NFA_builder import build_nfa_from_graph
+from project.automaton_builder.NFA_builder import build_nfa_from_graph
 from pyformlang.finite_automaton import (
     NondeterministicFiniteAutomaton,
 )

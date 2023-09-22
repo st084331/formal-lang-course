@@ -1,4 +1,4 @@
-from project.automata_builder.DFA_builder import build_mdfa
+from project.automaton_builder.DFA_builder import build_mdfa
 from pyformlang.finite_automaton import NondeterministicFiniteAutomaton
 
 
