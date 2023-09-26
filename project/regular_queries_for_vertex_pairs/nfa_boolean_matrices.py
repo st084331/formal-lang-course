@@ -31,7 +31,6 @@ class BooleanFiniteAutomaton:
         matrix = dict()
         for first_state, transition in nfa.to_dict().items():
             for label, target_states in transition.items():
-                print(target_states)
                 if not isinstance(target_states, set):
                     target_states = {target_states}
 
