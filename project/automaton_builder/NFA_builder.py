@@ -5,13 +5,13 @@ import networkx as nx
 
 
 def build_nfa_from_graph(
-    graph: nx.MultiDiGraph, starts_states: set = None, final_states: set = None
+    graph: nx.MultiDiGraph, start_states: set = None, final_states: set = None
 ) -> NondeterministicFiniteAutomaton:
     nfa = NondeterministicFiniteAutomaton(graph.graph)
 
-    if starts_states is None:
-        starts_states = graph.nodes
-    for node in starts_states:
+    if start_states is None:
+        start_states = graph.nodes
+    for node in start_states:
         nfa.add_start_state(node)
 
     if final_states is None:

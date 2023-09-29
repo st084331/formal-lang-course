@@ -1,10 +1,11 @@
-from project.automata_builder.DFA_builder import build_mdfa
+from project.automaton_builder.DFA_builder import build_mdfa
+from pyformlang.regular_expression import Regex
 from pyformlang.finite_automaton import NondeterministicFiniteAutomaton
 
 
 def test_build_mdfa():
-    input = "a.(b|c*)*"
-    mdfa = build_mdfa(input)
+    regex = Regex("a.(b|c*)*")
+    mdfa = build_mdfa(regex)
 
     expected = NondeterministicFiniteAutomaton()
     expected.add_start_state(0)
