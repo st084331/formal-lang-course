@@ -8,6 +8,7 @@ class BooleanFiniteAutomaton:
     final_states: set
     states_indices: dict
     boolean_matrices: dict
+    states: set
 
     def __init__(self, nfa: NondeterministicFiniteAutomaton = None):
         if nfa is None:
@@ -16,6 +17,7 @@ class BooleanFiniteAutomaton:
             self.final_states = set()
             self.states_indices = {}
             self.boolean_matrices = {}
+            self.states = set()
         else:
             self.number_of_states = len(nfa.states)
             self.start_states = nfa.start_states
@@ -24,6 +26,7 @@ class BooleanFiniteAutomaton:
                 state: index for (index, state) in enumerate(nfa.states)
             }
             self.boolean_matrices = self.build_boolean_matrix_for_nfa(nfa)
+            self.states = nfa.states
 
     def build_boolean_matrix_for_nfa(
         self, nfa: NondeterministicFiniteAutomaton
