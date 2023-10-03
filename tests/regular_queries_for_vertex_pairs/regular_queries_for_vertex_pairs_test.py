@@ -1,9 +1,9 @@
 import cfpq_data
-from project.regular_queries_for_vertex_pairs.nfa_boolean_matrices import (
+from project.regular_queries.nfa_boolean_matrices import (
     BooleanFiniteAutomaton,
     intersect,
 )
-from project.regular_queries_for_vertex_pairs.regular_queries_for_vertex_pairs import (
+from project.regular_queries.regular_queries import (
     regular_queries_for_vertex_pairs,
 )
 from pyformlang.finite_automaton import NondeterministicFiniteAutomaton
