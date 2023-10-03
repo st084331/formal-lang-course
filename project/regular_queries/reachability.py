@@ -27,7 +27,7 @@ def reachability(
     first_step = True
 
     while True:
-        old_visited_nnz = visited.nonzero
+        old_visited_nnz = visited.nnz
 
         for mtx in direct_sum.values():
             if first_step:
@@ -37,7 +37,7 @@ def reachability(
             visited += transform_front(step, regex, for_each_state)
         first_step = False
 
-        if old_visited_nnz == visited.nonzero:
+        if old_visited_nnz == visited.nnz:
             break
 
     result = set()
@@ -83,7 +83,7 @@ def transform_front(step: csr_matrix, regex, is_for_each_state):
     for row, col in zip(*step.nonzero()):
         if col < regex.number_of_states:
             right_row_part = step[row, regex.number_of_states :]
-            if right_row_part.nonzero != 0:
+            if right_row_part.nnz != 0:
                 if not is_for_each_state:
                     result[col, col] = True
                     result[col, regex.number_of_states :] += right_row_part
