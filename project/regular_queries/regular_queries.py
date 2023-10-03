@@ -3,10 +3,11 @@ from pyformlang.regular_expression import Regex
 
 from project.automaton_builder.NFA_builder import build_nfa_from_graph
 from project.automaton_builder.DFA_builder import build_mdfa
-from project.regular_queries_for_vertex_pairs.nfa_boolean_matrices import (
+from project.regular_queries.nfa_boolean_matrices import (
     BooleanFiniteAutomaton,
     intersect,
 )
+from project.regular_queries.reachability import reachability
 
 
 def regular_queries_for_vertex_pairs(
@@ -41,3 +42,17 @@ def regular_queries_for_vertex_pairs(
             )
 
     return result
+
+
+def regular_queries_for_multiple_starting_vertices(
+    graph: MultiDiGraph,
+    regex: Regex,
+    start_states: set,
+    final_states: set,
+    for_each_node: bool = False,
+):
+    graph_bool_matrix = BooleanFiniteAutomaton(
+        build_nfa_from_graph(graph, start_states, final_states)
+    )
+    regex_bool_matrix = BooleanFiniteAutomaton(build_mdfa(regex))
+    return reachability(graph_bool_matrix, regex_bool_matrix, for_each_node)
