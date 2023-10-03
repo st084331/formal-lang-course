@@ -47,8 +47,8 @@ def regular_queries_for_vertex_pairs(
 def regular_queries_for_multiple_starting_vertices(
     graph: MultiDiGraph,
     regex: Regex,
-    start_states: set,
-    final_states: set,
+    start_states: set = None,
+    final_states: set = None,
     for_each_node: bool = False,
 ):
     graph_bool_matrix = BooleanFiniteAutomaton(
