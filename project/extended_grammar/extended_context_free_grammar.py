@@ -14,7 +14,9 @@ class ExtendedContexFreeGrammar:
         self.productions = productions
 
 
-def build_ecfg_from_cfg(context_free_grammar: CFG):
+def build_extended_context_free_grammar_from_context_free_grammar(
+    context_free_grammar: CFG,
+):
     productions = {}
     start_symbol = context_free_grammar.start_symbol
 
@@ -36,7 +38,7 @@ def build_ecfg_from_cfg(context_free_grammar: CFG):
     )
 
 
-def build_ecfg_from_text(text: str):
+def build_extended_context_free_grammar_from_text(text: str):
     variables = set()
     productions = {}
 
@@ -54,7 +56,9 @@ def build_ecfg_from_text(text: str):
     return ExtendedContexFreeGrammar(variables=variables, productions=productions)
 
 
-def get_ecfg_from_file(file):
+def get_extended_context_free_grammar_from_file(file):
     with open(file) as f:
-        ecfg = build_ecfg_from_text(f.read())
-    return ecfg
+        extended_context_free_grammar = build_extended_context_free_grammar_from_text(
+            f.read()
+        )
+    return extended_context_free_grammar
