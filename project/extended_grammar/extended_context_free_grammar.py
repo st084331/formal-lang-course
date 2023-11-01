@@ -1,4 +1,4 @@
-from pyformlang.context_free_grammar import CFG, Variable
+from pyformlang.cfg import CFG, Variable
 from pyformlang.regular_expression import Regex
 
 
