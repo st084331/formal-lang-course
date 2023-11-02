@@ -13,7 +13,11 @@ from project.extended_grammar.extended_context_free_grammar import (
 
 def test_ExtendedContexFreeGrammar():
     context_free_grammar = read_contex_free_grammar_from_file(
-        path.abspath(path.join("files", "test_ExtendedContexFreeGrammar"))
+        path.abspath(
+            path.join(
+                "tests", "extended_grammar", "files", "test_ExtendedContexFreeGrammar"
+            )
+        )
     )
     extended_context_free_grammar = (
         build_extended_context_free_grammar_from_context_free_grammar(

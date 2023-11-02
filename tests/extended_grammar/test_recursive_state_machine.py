@@ -14,7 +14,11 @@ from project.extended_grammar.recursive_state_machine import (
 
 def test_recursive_state_machine_from_extended_context_free_grammar():
     extended_context_free_grammar = get_extended_context_free_grammar_from_file(
-        path.abspath(path.join("files", "test_RecursiveStateMachine"))
+        path.abspath(
+            path.join(
+                "tests", "extended_grammar", "files", "test_RecursiveStateMachine"
+            )
+        )
     )
     recursive_state_machine = (
         build_recursive_state_machine_from_extended_context_free_grammar(
@@ -39,7 +43,11 @@ def test_recursive_state_machine_from_extended_context_free_grammar():
 
 def test_minimize_recursive_state_machine():
     extended_context_free_grammar = get_extended_context_free_grammar_from_file(
-        path.abspath(path.join("files", "test_RecursiveStateMachine"))
+        path.abspath(
+            path.join(
+                "tests", "extended_grammar", "files", "test_RecursiveStateMachine"
+            )
+        )
     )
     recursive_state_machine = (
         build_recursive_state_machine_from_extended_context_free_grammar(
