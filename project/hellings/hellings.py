@@ -1,11 +1,17 @@
 from networkx import MultiDiGraph
 from pyformlang.cfg import CFG, Variable
-from project.grammar_utility import grammar_to_weak_chomsky_form
+from project.grammar_utility.grammar_to_weak_chomsky_form import (
+    contex_free_grammar_to_weak_chomsky_form,
+)
 
 
 def hellings_closure(context_free_grammar: CFG, input_graph: MultiDiGraph):
-    # Convert the grammar to weak Chomsky form
-    weak_chomsky_normal_form = grammar_to_weak_chomsky_form(context_free_grammar)
+    try:
+        weak_chomsky_normal_form = contex_free_grammar_to_weak_chomsky_form(
+            context_free_grammar
+        )
+    except Exception as e:
+        raise ValueError(f"Error in converting grammar to weak Chomsky form: {e}")
 
     # Initialize sets for different types of productions
     epsilon_productions = set()
