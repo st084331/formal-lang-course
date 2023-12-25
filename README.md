@@ -112,3 +112,169 @@
 - Вадим Абзалов [@vdshk](https://github.com/vdshk)
 - Рустам Азимов [@rustam-azimov](https://github.com/rustam-azimov)
 - Екатерина Шеметова [@katyacyfra](https://github.com/katyacyfra)
+
+## Graph Query Language
+
+```
+program = List<statement>
+statement =
+    assign of variable * expression
+  | display of expression
+value =
+    Text of string
+  | Number of int
+  | Boolean of bool
+  | Network of graph
+  | Tags of labels
+  | Nodes of vertices
+  | Links of edges
+expression =
+    Variable of variable              // variables
+  | Constant of value                // constants
+  | Initiate_start of Set<value> * expression // set initial states
+  | Initiate_final of Set<value> * expression // set final states
+  | Append_start of Set<value> * expression // add to initial states
+  | Append_final of Set<value> * expression // add to final states
+  | Acquire_start of expression      // get initial states
+  | Acquire_final of expression      // get final states
+  | Acquire_reachable of expression  // get all reachable node pairs
+  | Acquire_nodes of expression      // get all nodes
+  | Acquire_links of expression      // get all edges
+  | Acquire_tags of expression       // get all labels
+  | Transform of lambda * expression // classic map
+  | Refine of lambda * expression    // classic filter
+  | Load_graph of expression         // load graph
+  | Intersection of expression * expression // intersect languages
+  | Linkage of expression * expression       // concatenate languages
+  | Merge of expression * expression         // unite languages
+  | Closure of expression                    // language closure (Kleene star)
+  | Transition of expression                 // single transition
+  | Membership of expression * expression    // element membership in set
+  | Collection of List<expression>           // set of elements
+lambda =
+    lambda = variable * expression
+```
+### Specific Syntax
+```
+program --> (instruction ENDLINE)*
+instruction -->
+    variable ASSIGN expression SEMICOLON
+  | 'display' expression SEMICOLON
+variable --> initial_char var_sequence
+initial_char --> LETTER | '_'
+var_sequence --> (initial_char | DIGIT)*
+expression -->
+    LEFT_BRACKET expression RIGHT_BRACKET
+  | variable
+  | value
+  | map
+  | filter
+  | intersection
+  | linkage
+  | merge
+  | closure
+  | membership
+lambda --> LEFT_BRACE 'function' variable '->' expression RIGHT_BRACE
+map --> 'map' LEFT_BRACKET lambda COMMA expression RIGHT_BRACKET
+filter --> 'filter' LEFT_BRACKET lambda COMMA expression RIGHT_BRACKET
+intersection --> 'intersection' LEFT_BRACKET expression COMMA expression RIGHT_BRACKET
+linkage --> 'linkage' LEFT_BRACKET expression COMMA expression RIGHT_BRACKET
+merge --> 'merge' LEFT_BRACKET expression COMMA expression RIGHT_BRACKET
+closure --> LEFT_BRACKET expression RIGHT_BRACKET '*'
+membership --> expression 'belongs_to' collection
+value -->
+    LEFT_BRACKET value RIGHT_BRACKET
+  | QUOTE string QUOTE
+  | NUMBER
+  | BOOLEAN
+  | network
+  | tags
+  | nodes
+  | links
+string --> (LETTER | NUMBER | '.' | '?' | '*')*
+network -->
+    'initiate_start' LEFT_BRACKET nodes COMMA network RIGHT_BRACKET
+  | 'initiate_final' LEFT_BRACKET nodes COMMA network RIGHT_BRACKET
+  | 'append_start' LEFT_BRACKET nodes COMMA network RIGHT_BRACKET
+  | 'append_final' LEFT_BRACKET nodes COMMA network RIGHT_BRACKET
+  | 'load_network' LEFT_BRACKET path RIGHT_BRACKET
+  | variable
+path --> QUOTE string QUOTE | variable
+nodes -->
+    'acquire_start' LEFT_BRACKET network RIGHT_BRACKET
+  | 'acquire_final' LEFT_BRACKET network RIGHT_BRACKET
+  | 'acquire_reachable' LEFT_BRACKET network RIGHT_BRACKET
+  | 'acquire_nodes' LEFT_BRACKET network RIGHT_BRACKET
+  | collection
+  | variable
+tags --> 'acquire_tags' LEFT_BRACKET network RIGHT_BRACKET | collection
+links --> 'acquire_links' LEFT_BRACKET network RIGHT_BRACKET | collection
+collection --> LEFT_BRACE expression (COMMA expression)* RIGHT_BRACE
+  | 'empty_set()'
+  | LEFT_BRACE ( LEFT_BRACKET NUMBER COMMA (value | variable) COMMA NUMBER RIGHT_BRACKET )* RIGHT_BRACE
+ASSIGN ---> '='
+BOOLEAN --> 'true' | 'false'
+LETTER --> [a-z] | [A-Z]
+COMMA --> ','
+DIGIT --> [0-9]
+ENDLINE --> [\n]
+NUMBER --> '0' | '-'? [1-9][0-9]*
+LEFT_BRACE --> '{'
+LEFT_BRACKET --> '('
+QUOTE --> '"'
+RIGHT_BRACE --> '}'
+RIGHT_BRACKET --> ')'
+SEMICOLON --> ';'
+```
+## Examples
+### Finding Reachable Nodes
+```
+network = load_network("network/path"); // Load a graph from a specified path
+start_nodes = collection(1, 5); // Define a set of start nodes
+network = initiate_start(start_nodes, network); // Set defined nodes as initial in the graph
+reachable_nodes = acquire_reachable(network); // Get all nodes reachable from the start nodes
+display reachable_nodes; // Display the reachable nodes
+```
+
+### Filtering Edges Based on a Condition
+```
+network = load_network("edges/path"); // Load graph from a path
+edges = acquire_links(network); // Retrieve all edges from the graph
+filtered_edges = refine({function edge -> edge belongs_to collection((1, "A", 2), (3, "B", 4))}, edges); // Filter edges based on a condition
+display filtered_edges; // Display the filtered edges
+```
+
+### Modifying Graph Labels
+```
+network = load_network("label/path"); // Load graph from a path
+labels = acquire_tags(network); // Retrieve all labels from the graph
+updated_labels = transform({function label -> if label == "Old" then "New" else label}, labels); // Modify labels based on a condition
+display updated_labels; // Display the updated labels
+```
+### Union of Two Graphs
+```
+graph1 = load_network("path/one"); // Load first graph
+graph2 = load_network("path/two"); // Load second graph
+union_graph = merge(graph1, graph2); // Perform union of two graphs
+display union_graph; // Display the union graph
+```
+
+### Creating a Star Closure of a Regular Expression
+```
+regular_expression = "abc"; // Define a regular expression
+star_closure = closure(regular_expression); // Create star closure of the regular expression
+display star_closure; // Display the star closure result
+```
+
+### Set Operations on Graph Nodes
+```
+network = load_network("node/path"); // Load graph from a path
+nodes_set1 = acquire_nodes(network); // Acquire nodes from the graph
+nodes_set2 = collection(2, 4, 6); // Define another set of nodes
+intersection_nodes = intersection(nodes_set1, nodes_set2); // Find intersection of two node sets
+union_nodes = merge(nodes_set1, nodes_set2); // Find union of two node sets
+difference_nodes = refine({function node -> node not belongs_to nodes_set2}, nodes_set1); // Find difference between two node sets
+display intersection_nodes; // Display intersection nodes
+display union_nodes; // Display union nodes
+display difference_nodes; // Display difference nodes
+```
